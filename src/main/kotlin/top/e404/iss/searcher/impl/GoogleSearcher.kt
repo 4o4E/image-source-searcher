@@ -90,6 +90,9 @@ object GoogleSearcher : SourceSearcher {
             "${array[0].jsonArray[12].jsonPrimitive.content}x${array[0].jsonArray[13].jsonPrimitive.content}",
         )
 
+        @Transient
+        override val searcher = GoogleSearcher
+
         override val extra by lazy {
             listOf(
                 "标题: $title",

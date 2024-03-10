@@ -41,6 +41,10 @@ object SaucenaoSearcher : SourceSearcher {
         override val sourceUrl: String,
         val similar: String,
     ) : SourceSearchResult {
+
+        @Transient
+        override val searcher = SaucenaoSearcher
+
         override val extra = listOf(
             "相似度: $similar"
         )

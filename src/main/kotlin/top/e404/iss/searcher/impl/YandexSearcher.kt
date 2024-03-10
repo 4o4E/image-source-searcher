@@ -62,6 +62,8 @@ object YandexSearcher : SourceSearcher {
         val desc: String,
         val size: String,
     ) : SourceSearchResult {
+        override val searcher = YandexSearcher
+
         override val extra = listOf(
             "标题: $title",
             "简介: $desc",

@@ -40,6 +40,10 @@ object IqdbSearcher : SourceSearcher {
         val size: String,
         val similar: String,
     ) : SourceSearchResult {
+
+        @Transient
+        override val searcher = IqdbSearcher
+
         override val extra = listOf(
             "尺寸: $size",
             "相似度: $similar"

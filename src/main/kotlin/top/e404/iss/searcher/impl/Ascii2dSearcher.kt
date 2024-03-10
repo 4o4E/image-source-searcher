@@ -71,6 +71,9 @@ object Ascii2dSearcher : SourceSearcher {
     ) : SourceSearchResult {
         constructor(imageUrl: String, e: Element, type: Type) : this(imageUrl, e.attr("href"), e.text(), type)
 
+        @Transient
+        override val searcher = Ascii2dSearcher
+
         override val extra by lazy {
             listOf(
                 "标题: $title",

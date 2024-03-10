@@ -82,4 +82,9 @@ interface SourceSearchResult {
      * 其他详细信息
      */
     val extra: List<String>
+
+    /**
+     * 来自的[SourceSearcher]
+     */
+    val searcher: SourceSearcher
 }
