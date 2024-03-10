@@ -5,6 +5,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import top.e404.iss.searcher.SourceSearcher
 import top.e404.iss.searcher.impl.*
 import java.io.File
 
@@ -16,6 +17,7 @@ class SearchTest {
 
     @Test
     fun testAll() {
+        SourceSearcher.client = SourceSearcher.okhttp
         runBlocking(Dispatchers.IO) {
             listOf(
                 Ascii2dSearcher,

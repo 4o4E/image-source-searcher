@@ -15,6 +15,7 @@ interface SourceSearcher {
 
     suspend fun search(url2search: String): List<SourceSearchResult>
 
+    @Suppress("UNUSED")
     companion object {
         val noVerify by lazy {
             HttpClient(Apache) {
@@ -44,8 +45,6 @@ interface SourceSearcher {
                 followRedirects = false
             }
         }
-
-        @Suppress("UNUSED")
         val okhttp by lazy {
             HttpClient(OkHttp) {
                 engine {
@@ -63,14 +62,8 @@ interface SourceSearcher {
                 followRedirects = false
             }
         }
-
-        var clientProvider = object : ClientProvider {
-            override val userAgent =
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-            override val client = noVerify
-        }
-        val client inline get() = clientProvider.client
-        val userAgent inline get() = clientProvider.userAgent
+        var client = HttpClient()
+        var userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
     }
 }
 
@@ -89,9 +82,4 @@ interface SourceSearchResult {
      * 其他详细信息
      */
     val extra: List<String>
-}
-
-interface ClientProvider {
-    val client: HttpClient
-    val userAgent: String
 }
