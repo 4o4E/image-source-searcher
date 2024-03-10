@@ -8,7 +8,6 @@ import io.ktor.client.plugins.*
 import org.apache.http.conn.ssl.NoopHostnameVerifier
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy
 import org.apache.http.ssl.SSLContextBuilder
-import kotlin.reflect.full.memberProperties
 
 interface SourceSearcher {
 
@@ -45,6 +44,7 @@ interface SourceSearcher {
                 followRedirects = false
             }
         }
+
         @Suppress("UNUSED")
         val okhttp by lazy {
             HttpClient(OkHttp) {
@@ -84,14 +84,12 @@ interface SourceSearchResult {
      * 搜索结果跳转url
      */
     val sourceUrl: String
-}
 
-val SourceSearchResult.extra: Map<String, String?>
-    get() {
-        return javaClass.kotlin.memberProperties
-            .filter { it.name != "imageUrl" }
-            .associate { it.name to it.get(this)?.toString() }
-    }
+    /**
+     * 其他详细信息
+     */
+    val extra: List<String>
+}
 
 interface ClientProvider {
     val client: HttpClient

@@ -28,10 +28,10 @@ object GoogleSearcher : SourceSearcher {
 
         val (id1, id2) = (engine.eval(
             """var obj = $obj;
-            |id1 = obj['ds:0']['request'][0][0]
-            |id2 = obj['ds:0']['request'][1][7][0]
-            |id1 + "|" + id2
-        """.trimMargin()
+                |id1 = obj['ds:0']['request'][0][0]
+                |id2 = obj['ds:0']['request'][1][7][0]
+                |id1 + "|" + id2
+            """.trimMargin()
         ) as String).split("|")
 
         val resp = withContext(Dispatchers.IO) {
@@ -76,16 +76,26 @@ object GoogleSearcher : SourceSearcher {
     }
 
     data class Result(
-        val title: String,
-        val desc: String,
         override val imageUrl: String,
         override val sourceUrl: String,
+        val title: String,
+        val desc: String,
+        val size: String,
     ) : SourceSearchResult {
         constructor(array: JsonArray) : this(
+            array[0].jsonArray[0].jsonPrimitive.content,
+            array[2].jsonArray[2].jsonArray[2].jsonPrimitive.content,
             array[1].jsonArray[0].jsonPrimitive.content,
             array[4].jsonPrimitive.content,
-            array[0].jsonArray[0].jsonPrimitive.content,
-            array[2].jsonArray[2].jsonArray[2].jsonPrimitive.content
+            "${array[0].jsonArray[12].jsonPrimitive.content}x${array[0].jsonArray[13].jsonPrimitive.content}",
         )
+
+        override val extra by lazy {
+            listOf(
+                "标题: $title",
+                "描述: $desc",
+                "尺寸: $size",
+            )
+        }
     }
 }

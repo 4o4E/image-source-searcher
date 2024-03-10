@@ -14,8 +14,8 @@ import top.e404.iss.searcher.util.toDocument
 object Ascii2dSearcher : SourceSearcher {
     override val type = "ascii2d"
 
-    enum class Type {
-        COLOR, BOVW;
+    enum class Type(val text: String) {
+        COLOR("颜色相似"), BOVW("结构相似");
     }
 
     override suspend fun search(url2search: String): List<SourceSearchResult> {
@@ -70,5 +70,12 @@ object Ascii2dSearcher : SourceSearcher {
         val type: Type,
     ) : SourceSearchResult {
         constructor(imageUrl: String, e: Element, type: Type) : this(imageUrl, e.attr("href"), e.text(), type)
+
+        override val extra by lazy {
+            listOf(
+                "标题: $title",
+                "类型: ${type.text}"
+            )
+        }
     }
 }

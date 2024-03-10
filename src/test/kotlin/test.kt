@@ -5,7 +5,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
-import top.e404.iss.searcher.extra
 import top.e404.iss.searcher.impl.*
 import java.io.File
 
@@ -36,12 +35,12 @@ class SearchTest {
                             appendLine()
                             appendLine("![image](${result.imageUrl})")
                             appendLine()
-                            result.extra.forEach { (name, value) ->
-                                appendLine("### $name")
-                                appendLine()
-                                appendLine(value)
-                                appendLine()
+                            appendLine("[链接](${result.imageUrl})")
+                            appendLine()
+                            result.extra.forEach {
+                                appendLine("- $it")
                             }
+                            appendLine()
                         }
                     })
                 }

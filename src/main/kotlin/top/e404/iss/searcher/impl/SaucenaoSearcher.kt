@@ -28,17 +28,21 @@ object SaucenaoSearcher : SourceSearcher {
             }
             var urls = e.select(".resulttablecontent .resultmiscinfo a").map { it.attr("href") }
             if (urls.isEmpty()) urls = e.select(".resultcontent .resultcontentcolumn a").map { it.attr("href") }
-            val similar = e.select(".resultsimilarityinfo").text().replace(Regex("[^\\d.]"), "").toDouble()
+            val similar = e.select(".resultsimilarityinfo").text().replace(Regex("[^\\d.]"), "")
             urls.map {
                 Result(imageUrl, it, similar)
             }
         }
-        .sortedByDescending { it.similar }
+        .sortedByDescending { it.similar.toDouble() }
         .toMutableList()
 
     data class Result(
         override val imageUrl: String,
         override val sourceUrl: String,
-        val similar: Double,
-    ) : SourceSearchResult
+        val similar: String,
+    ) : SourceSearchResult {
+        override val extra = listOf(
+            "相似度: $similar"
+        )
+    }
 }

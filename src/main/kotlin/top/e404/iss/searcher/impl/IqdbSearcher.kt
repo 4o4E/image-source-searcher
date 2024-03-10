@@ -39,5 +39,10 @@ object IqdbSearcher : SourceSearcher {
         override val sourceUrl: String,
         val size: String,
         val similar: String,
-    ) : SourceSearchResult
+    ) : SourceSearchResult {
+        override val extra = listOf(
+            "尺寸: $size",
+            "相似度: $similar"
+        )
+    }
 }
