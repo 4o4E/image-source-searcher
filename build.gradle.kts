@@ -1,5 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.22"
+    `maven-publish`
+    `java-library`
 }
 
 group = "top.e404"
@@ -38,4 +40,19 @@ tasks.test {
 
 kotlin {
     jvmToolchain(8)
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+afterEvaluate {
+    publishing.publications.create<MavenPublication>("java") {
+        from(components["kotlin"])
+        artifact(tasks.getByName("sourcesJar"))
+        artifactId = project.name
+        groupId = rootProject.group.toString()
+        version = rootProject.version.toString()
+    }
 }
