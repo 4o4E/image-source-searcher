@@ -9,11 +9,13 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
+import org.slf4j.LoggerFactory
 import top.e404.iss.searcher.SourceSearchResult
 import top.e404.iss.searcher.SourceSearcher
 import javax.script.ScriptEngineManager
 
 object GoogleSearcher : SourceSearcher {
+    private val log = LoggerFactory.getLogger(this::class.java)
     override val type = "google"
     private val manager = ScriptEngineManager()
     private val engine = manager.getEngineByName("nashorn")
@@ -50,21 +52,24 @@ object GoogleSearcher : SourceSearcher {
             }
         }.bodyAsText()
 
-        return Json.parseToJsonElement(resp.lines()[3])
+        val content = Json.parseToJsonElement(resp.lines()[3])
             .jsonArray[0]
             .jsonArray[2]
             .jsonPrimitive
             .content
-            .let(Json.Default::parseToJsonElement)
+        Json.Default.parseToJsonElement(content)
             .jsonArray[1]
             .jsonArray[0]
             .jsonArray[1]
             .jsonArray[8]
             .jsonArray
             .findContainer()
+            ?.let { return it }
+        log.warn("从google搜源时无法获取内容, json: $content")
+        return emptyList()
     }
 
-    private fun JsonArray.findContainer(): List<Result> {
+    private fun JsonArray.findContainer(): List<Result>? {
         try {
             return map { Result(it.jsonArray) }
         } catch (_: Throwable) {
@@ -72,7 +77,7 @@ object GoogleSearcher : SourceSearcher {
                 return it.findContainer()
             }
         }
-        return emptyList()
+        return null
     }
 
     data class Result(

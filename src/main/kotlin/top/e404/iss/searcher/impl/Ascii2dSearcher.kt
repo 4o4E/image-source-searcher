@@ -21,7 +21,7 @@ object Ascii2dSearcher : SourceSearcher {
     override suspend fun search(url2search: String): List<SourceSearchResult> {
         val response = SourceSearcher.client.get("https://ascii2d.net/search/url/$url2search")
 
-        val color = response.headers["location"]!!
+        val color = response.headers["location"] ?: error("ascii2d搜源时重定向url为null, body: ${response.bodyAsText()}")
         val bovw = color.replace("/color/", "/bovw/")
         return coroutineScope {
             listOf(
